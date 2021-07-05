@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity(), Handler.Callback {
                 startActivity(
                         Intent(
                                 ACTION_VIEW,
-                                Uri.parse("")
+                                Uri.parse("https://github.com/MrWildanMD/MemDumper")
                         )
                 )
             }
