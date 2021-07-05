@@ -9,7 +9,8 @@ APK Version of MemDumper Allows you to Dump Memory Segment From Process Memory a
 * Manual Dumping With Custom Memory Address
 * Support Fast Dumping(May Miss some data due to limitations of syscalls)
 # How To Use
-Just input the needed field / options
+* Open the game
+* Then open MemDumper and just input the needed field / options
 # Credits
 * [kp7742/MemDumper](https://github.com/kp7742/MemDumper) : Dump Memory Segment From Process Memory and Rebuild So(Elf) Binaries
 * [F8LEFT/SoFixer](https://github.com/F8LEFT/SoFixer) : 32bit So(Elf) Rebuilding
