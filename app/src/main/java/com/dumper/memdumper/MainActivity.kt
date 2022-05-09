@@ -16,6 +16,8 @@ import com.dumper.memdumper.databinding.ActivityMainBinding
 import com.topjohnwu.superuser.CallbackList
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.ipc.RootService
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 
 class MainActivity : AppCompatActivity(), Handler.Callback {
@@ -53,46 +55,85 @@ class MainActivity : AppCompatActivity(), Handler.Callback {
             setContentView(root)
             beginDump.setOnClickListener {
                 if (bind.pkg.text != null) {
-                    Exec = applicationInfo.nativeLibraryDir + " -p " + bind.pkg.text + "-l " + "-n " + libName.text.toString()
+                    Exec = applicationInfo.nativeLibraryDir + " -p " + bind.pkg.text.trim() + "-l " + "-n " + libName.text.toString()
                     if (bind.rawDump.isChecked) {
-                        Exec = applicationInfo.nativeLibraryDir + " -p " + bind.pkg.text + "-l " + "-r " + "-n " + libName.text.toString()
+                        Exec = applicationInfo.nativeLibraryDir + " -p " + bind.pkg.text.trim() + "-l " + "-r " + "-n " + libName.text.toString()
                     }
 
                     if (bind.fastDump.isChecked) {
-                        Exec = applicationInfo.nativeLibraryDir + " -p " + bind.pkg.text + "-l " + "-f " + "-n " + libName.text.toString()
+                        Exec = applicationInfo.nativeLibraryDir + " -p " + bind.pkg.text.trim() + "-l " + "-f " + "-n " + libName.text.toString()
                     }
                     runNative(
+                        if (libName.text.isNullOrBlank()) {
+                            "libil2cpp.so"
+                        } else {
+                            libName.text.toString()
+                        }
+                    )
+                } else {
+                    if (bind.mypid.text != null) {
+                        Exec = applicationInfo.nativeLibraryDir + " -i " + bind.mypid.text.trim() + "-l " + "-n " + libName.text.toString()
+                        if (bind.rawDump.isChecked) {
+                            Exec = applicationInfo.nativeLibraryDir + " -i " + bind.mypid.text.trim() + "-l " + "-r " + "-n " + libName.text.toString()
+                        }
+
+                        if (bind.fastDump.isChecked) {
+                            Exec = applicationInfo.nativeLibraryDir + " -i " + bind.mypid.text.trim() + "-l " + "-f " + "-n " + libName.text.toString()
+                        }
+                        runNative(
                             if (libName.text.isNullOrBlank()) {
                                 "libil2cpp.so"
                             } else {
                                 libName.text.toString()
                             }
-                    )
+                        )
+                    }
+                    console.text = "Put package name or pid!"
+                }
+            }
+            getPid.setOnClickListener {
+                if (bind.pkg.text != null) {
+                    bind.mypid.setText(getStringFromShell("pidof ${bind.pkg.text.trim()}"))
                 } else {
                     console.text = "Put package name!"
                 }
             }
             github.setOnClickListener {
                 startActivity(
-                        Intent(
-                                ACTION_VIEW,
-                                Uri.parse("https://github.com/MrWildanMD/MemDumper")
-                        )
+                    Intent(
+                        ACTION_VIEW,
+                        Uri.parse("https://github.com/MrWildanMD/MemDumper")
+                    )
                 )
             }
         }
     }
 
+    private fun getStringFromShell(cmd : String) : String {
+        var res = ""
+        try {
+            Runtime.getRuntime().exec("su")
+            var p = Runtime.getRuntime().exec(cmd)
+            var b = BufferedReader(InputStreamReader(p.inputStream))
+            var line = ""
+            while ((b.readLine().also { line = it }) != null)
+                res += line
+        } catch (e : Exception) {
+            res = e.message!!
+        }
+        return res
+    }
+
     private fun reqStorage() {
         val permission = ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
         if (permission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    10
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                10
             )
         }
     }

@@ -47,9 +47,17 @@
             android:autofillHints="@string/package_name"
             android:hint="@string/package_name"
             android:inputType="text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            />
+
+        <EditText
+            android:id="@+id/mypid"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autofillHints="PID"
+            android:hint="PID"
+            android:inputType="number"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -107,6 +115,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/dump" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/getPid"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Get PID" />
 
     </LinearLayout>
 
